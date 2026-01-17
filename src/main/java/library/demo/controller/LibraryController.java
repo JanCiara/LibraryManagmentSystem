@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import library.demo.dto.BookDTO;
 import library.demo.dto.LoanDTO;
 import library.demo.dto.UserDTO;
+import library.demo.dto.UserResponseDTO;
 import library.demo.model.Book;
 import library.demo.model.Loan;
 import library.demo.model.User;
@@ -30,8 +31,25 @@ public class LibraryController {
     }
 
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return libraryService.getAllUsers();
+    public List<UserResponseDTO> getAllUsers() {
+        List<User> users = libraryService.getAllUsers();
+
+        return users.stream().map(user -> {
+            UserResponseDTO dto = new UserResponseDTO();
+            dto.setId(user.getId());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setEmail(user.getEmail());
+
+            if (user.getLoans() != null) {
+                List<Long> bookIds = user.getLoans().stream()
+                        .map(loan -> loan.getBook().getId())
+                        .toList();
+                dto.setBorrowedBookIds(bookIds);
+            }
+
+            return dto;
+        }).toList();
     }
 
     @PostMapping("/books")

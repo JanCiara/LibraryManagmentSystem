@@ -2,6 +2,10 @@ package library.demo.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,6 +18,11 @@ public class User {
     private String lastName;
     private String password;
     private String email;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<Loan> loans = new ArrayList<>();
+
     public User(){}
 
 }
