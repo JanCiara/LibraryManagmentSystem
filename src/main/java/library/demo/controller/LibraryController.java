@@ -39,6 +39,7 @@ public class LibraryController {
         Book bookEntity = new Book();
         bookEntity.setTitle(bookDto.getTitle());
         bookEntity.setAuthor(bookDto.getAuthor());
+        bookEntity.setIsbn(bookDto.getIsbn());
         return libraryService.addBook(bookEntity);
     }
 
@@ -48,6 +49,7 @@ public class LibraryController {
         userEntity.setFirstName(userDto.getFirstName());
         userEntity.setLastName(userDto.getLastName());
         userEntity.setEmail(userDto.getEmail());
+        userEntity.setPassword(userDto.getPassword());
         return libraryService.addUser(userEntity);
     }
 
