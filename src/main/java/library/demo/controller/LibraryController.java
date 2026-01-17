@@ -76,4 +76,9 @@ public class LibraryController {
         return libraryService.borrowBook(loanDto.getUserId(), loanDto.getBookId());
     }
 
+    @PutMapping("/loans/{loanId}/return")
+    public void returnBook(@PathVariable Long loanId) {
+        libraryService.returnBook(loanId);
+    }
+
 }

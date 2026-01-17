@@ -41,11 +41,14 @@ public class LibraryService {
     }
 
     public Loan borrowBook(Long userId, Long bookId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika o ID: " + userId));
+        if (loanRepository.existsByBookIdAndReturnDateIsNull(bookId)) {
+            throw new IllegalStateException("Ta książka jest obecnie wypożyczona!");
+        }
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono książki o ID: " + bookId));
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono książki"));
 
         Loan loan = new Loan();
         loan.setUser(user);
@@ -54,5 +57,15 @@ public class LibraryService {
 
         return loanRepository.save(loan);
     }
+
+    public void returnBook(Long loanId) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono wypożyczenia o ID: " + loanId));
+
+        loan.setReturnDate(LocalDate.now());
+        loanRepository.save(loan);
+    }
+
+
 
 }
